@@ -1,0 +1,27 @@
+﻿@page
+@model IndexModel
+
+@{
+    ViewData["Title"] = "Home page";
+}
+<form method="post">
+    <div class="text-center">
+        <div class="text-left">
+            <h3>Tour Selection</h3>
+            <label>Name<br><input type="text" name="name" /></label><br>
+            <label>Email<br><input type="text" name="email" /></label><br>
+            <label>
+                Tours<br>@Html.DropDownList("dropDownTours", new List<SelectListItem>
+{
+new SelectListItem {Text = "Europe", Value = "1" },
+new SelectListItem {Text = "America", Value = "2" },
+new SelectListItem {Text = "Asia", Value = "3" },
+},
+"Choose one")
+            </label><br>
+            <input name="bookorcancel" type="radio" value="tour.booked" /><label>Book</label>
+            <input name="bookorcancel" type="radio" value="tour.cancelled" /><label>Cancel</label><br>
+            <input type="submit" />
+        </div>
+    </div>
+</form>
