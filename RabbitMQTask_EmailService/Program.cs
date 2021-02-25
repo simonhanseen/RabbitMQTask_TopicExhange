@@ -17,6 +17,7 @@ namespace RabbitMQTask_EmailService
                 channel.ExchangeDeclare(exchange: "topic_tour", type: "topic");
                 var queueName = channel.QueueDeclare().QueueName;
 
+                //Not needed
                 //if (args.Length < 2)
                 //{
                 //    Console.Error.WriteLine("Usage: {0} [binding_key...]",
