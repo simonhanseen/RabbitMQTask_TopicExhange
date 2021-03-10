@@ -15,27 +15,25 @@ namespace RabbitMQTask_BankOffice
             using (var channel = connection.CreateModel())
             {
                 channel.ExchangeDeclare(exchange: "topic_tour", type: "topic");
-                var queueName = channel.QueueDeclare().QueueName;
+                channel.ExchangeDeclare(exchange: "dlx_exchange", type:"direct");
 
-                //if (args.Length < 2)
-                //{
-                //    Console.Error.WriteLine("Usage: {0} [binding_key...]",
-                //                            Environment.GetCommandLineArgs()[0]);
-                //    Console.WriteLine(" Press [enter] to exit.");
-                //    Console.ReadLine();
-                //    Environment.ExitCode = 1;
-                //    return;
-                //}
+                var queueArgs = new Dictionary<string, object>
+                {
+                    {"x-dead-letter-exchange", "dlx_exchange" },
+                    {"x-dead-letter-routing-key", "dlx_key" }
+                };
 
+                channel.QueueDeclare("BankOffice_Queue", true, false, false ,arguments: queueArgs);
                 List<string> bindings = new List<string>();
                 bindings.Add("tour.booked");
                 bindings.Add("tour.cancelled");
 
                 foreach (var bindingKey in bindings)
                 {
-                    channel.QueueBind(queue: queueName,
+                    channel.QueueBind(queue: "BankOffice_Queue",
                                       exchange: "topic_tour",
-                                      routingKey: bindingKey);
+                                      routingKey: bindingKey,
+                                      arguments: queueArgs);
                 }
 
                 Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
@@ -49,9 +47,10 @@ namespace RabbitMQTask_BankOffice
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,
                                       message);
+                    channel.BasicNack(ea.DeliveryTag, false, false);
                 };
-                channel.BasicConsume(queue: queueName,
-                                     autoAck: true,
+                channel.BasicConsume(queue: "BankOffice_Queue",
+                                     autoAck: false,
                                      consumer: consumer);
 
                 Console.WriteLine(" Press [enter] to exit.");
