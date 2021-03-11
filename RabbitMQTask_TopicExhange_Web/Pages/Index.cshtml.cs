@@ -12,6 +12,7 @@ namespace RabbitMQTask_TopicExhange_Web.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private List<string> messages = new List<string>();
 
         public IndexModel(ILogger<IndexModel> logger)
         {

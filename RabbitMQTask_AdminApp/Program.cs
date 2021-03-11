@@ -10,6 +10,7 @@ namespace RabbitMQTask_AdminApp
     {
         static void Main(string[] args)
         {
+
             var factory = new ConnectionFactory() { HostName = "localhost" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
@@ -22,6 +23,7 @@ namespace RabbitMQTask_AdminApp
 
 
                 Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
+                
 
                 var consumer = new EventingBasicConsumer(channel);
                 consumer.Received += (model, ea) =>

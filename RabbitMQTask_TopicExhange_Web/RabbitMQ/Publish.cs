@@ -15,6 +15,9 @@ namespace RabbitMQTask_TopicExhange_Web.RabbitMQ
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
+
+                var props = channel.CreateBasicProperties();
+
                 channel.ExchangeDeclare(exchange: "topic_tour",
                                         type: "topic");
 
@@ -23,9 +26,9 @@ namespace RabbitMQTask_TopicExhange_Web.RabbitMQ
                               ? string.Join(" ", args.Skip(1).ToArray())
                               : "No message";
                 var body = Encoding.UTF8.GetBytes(message);
-                channel.BasicPublish(exchange: "topic_tour",
+                channel.BasicPublish(exchange: "topic_tour",         
                                      routingKey: routingKey,
-                                     basicProperties: null,
+                                     basicProperties: props,
                                      body: body);
             }
         }
